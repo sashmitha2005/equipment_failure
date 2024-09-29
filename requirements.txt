@@ -1,0 +1,14 @@
+numpy
+pandas
+scikit-learn
+matplotlib
+seaborn
+tensorflow  # or pytorch
+keras
+jupyterlab
+notebook
+scipy
+xgboost
+lightgbm
+flask
+requests

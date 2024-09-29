@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Equipment Failure Prediction</title>
+    <link rel="stylesheet" href="styles.css"><!-- Link to your CSS file -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #2c2c2c; /* Dark gray background for body */
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .app-container {
+            text-align: center;
+            padding: 40px;
+            background-color: rgba(50, 50, 50, 0.9); /* Semi-transparent dark gray */
+            border-radius: 10px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+            max-width: 600px; /* Limit the width for better alignment */
+            margin: auto; /* Center horizontally */
+        }
+
+        .title {
+            font-size: 2.5em; /* Adjusted font size */
+            margin-bottom: 10px; /* Reduced margin */
+            font-weight: 700; /* Bolder font weight */
+            color: #ffffff; /* White color for title */
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8); /* Darker text shadow */
+        }
+
+        .subtitle {
+            font-size: 1.5em; /* Kept font size */
+            color: #ffffff; /* White color for subtitle */
+            margin-bottom: 30px; /* Space below subtitle */
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8); /* Darker text shadow */
+        }
+
+        /* Styles for the form card */
+        .form-card {
+            margin-top: 20px; /* Space above the form card */
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr); /* Two columns */
+            gap: 20px; /* Space between form fields */
+        }
+
+        .form-column {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            margin-bottom: 5px; /* Space below labels */
+            color: #ffffff; /* White color for labels */
+        }
+
+        input {
+            padding: 10px; /* Padding for inputs */
+            border: 1px solid #cccccc; /* Border color */
+            border-radius: 5px; /* Rounded corners */
+        }
+
+        .submit-button {
+            margin-top: 20px; /* Space above button */
+            padding: 10px 20px; /* Button padding */
+            background-color: #007bff; /* Button color */
+            color: white; /* Text color */
+            border: none; /* No border */
+            border-radius: 5px; /* Rounded corners */
+            cursor: pointer; /* Pointer cursor */
+        }
+
+        .submit-button:hover {
+            background-color: #0056b3; /* Darker blue on hover */
+        }
+
+        .response-container {
+            margin-top: 20px; /* Space above response */
+        }
+
+        .response-box {
+            background-color: #ffffff; /* White background for response */
+            padding: 20px; /* Padding for response box */
+            border-radius: 5px; /* Rounded corners */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Shadow for response box */
+        }
+
+        .error-message {
+            color: red; /* Red color for error messages */
+            margin-top: 10px; /* Space above error message */
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <h1 class="title">Equipment Failure Prediction</h1>
+        <h2 class="subtitle">Predict whether your equipment will fail</h2>
+        
+        <div class="form-card">
+            <form id="predictionForm">
+                <div class="form-grid">
+                    <div class="form-column">
+                        <label for="age">Age:</label>
+                        <input type="number" id="age" name="age" required>
+                        
+                        <label for="usageHours">Usage Hours:</label>
+                        <input type="number" id="usageHours" name="usageHours" required>
+                        
+                        <label for="maintenanceHistory">Maintenance History:</label>
+                        <input type="number" id="maintenanceHistory" name="maintenanceHistory" required>
+                        
+                        <label for="temperature">Temperature:</label>
+                        <input type="text" id="temperature" name="temperature" required step="0.01">
+                        
+                        <label for="pressure">Pressure:</label>
+                        <input type="text" id="pressure" name="pressure" required step="0.01">
+                    </div>
+                    <div class="form-column">
+                        <label for="vibrationLevel">Vibration Level:</label>
+                        <input type="text" id="vibrationLevel" name="vibrationLevel" required step="0.01">
+                        
+                        <label for="operatorExperience">Operator Experience:</label>
+                        <input type="number" id="operatorExperience" name="operatorExperience" required>
+                        
+                        <label for="failureHistory">Failure History:</label>
+                        <input type="number" id="failureHistory" name="failureHistory" required>
+                        
+                        <label for="location">Location:</label>
+                        <input type="text" id="location" name="location" required>
+                        
+                        <label for="environment">Environment:</label>
+                        <input type="text" id="environment" name="environment" required>
+                    </div>
+                </div>
+                <button type="submit" class="submit-button">Predict</button>
+            </form>
+
+            <div class="response-container">
+                <div class="response-box" id="responseBox"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('predictionForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const formData = new FormData(this);
+            const data = Object.fromEntries(formData);
+
+            const response = await fetch('http://127.0.0.1:5000/predict', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
+
+            const result = await response.text();
+            document.getElementById('responseBox').innerText = result;
+        });
+    </script>
+</body>
+</html>
